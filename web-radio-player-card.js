@@ -111,10 +111,11 @@ class WebRadioPlayerCard extends LitElement {
     } */
 
     firstUpdated() {
-        this.updateComplete.then(() => this.shadowRoot.querySelectorAll(".player").forEach(el => {
-            const entityId = this.config.media_players.find(mp => el.textContent.includes(mp.name))?.entity_id;
-            if (entityId) this.addLongPress(el, entityId);
-        }));
+        this.updateComplete.then(() => {
+            this.shadowRoot.querySelectorAll(".player").forEach(el => {
+                if (el.id) this.addLongPress(el, el.id);
+            });
+        });
     }
 
     render() {
