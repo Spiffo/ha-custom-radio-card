@@ -1,4 +1,4 @@
-# Custom Radio Card
+# Web Radio Player Card
 
 A custom Lovelace card for Home Assistant that allows you to play radio streams on your media players using a simple drag-and-drop interface.
 
@@ -11,19 +11,19 @@ A custom Lovelace card for Home Assistant that allows you to play radio streams 
 
 ## Installation
 ### HACS (Recommended)
-1. This card is available in the Home Assistant Community Store (HACS).
+1. This card is available in the Home Assistant Community Store (HACS). If you don't have HACS, you can install it from [hacs.xyz](https://hacs.xyz/).
 2. Open HACS, go to the "Frontend" section, and click the "Explore & Add Repositories" button.
-3. Search for "Custom Radio Card" and add it.
+3. Search for "Web Radio Player Card" and add it.
 4. HACS will automatically manage the installation and add the required resource to your Lovelace configuration.
 
 ### Manual Installation
-1. Download `custom-radio-card.js` from the latest release of this repository.
+1. Download `web-radio-player-card.js` from the latest release of this repository.
 2. Place the downloaded file in your Home Assistant `config/www` folder.
 3. Add the resource to your dashboard configuration:
    - Go to **Settings** > **Dashboards**.
    - Click the 3-dots menu in the top right and select **Resources**.
    - Click **Add Resource**.
-   - Set the URL to `/local/custom-radio-card.js` and the Resource Type to `JavaScript Module`.
+   - Set the URL to `/local/web-radio-player-card.js` and the Resource Type to `JavaScript Module`.
 4. Refresh your browser.
 
 ## Configuration
@@ -34,9 +34,20 @@ Add the card to your dashboard view via YAML.
 
 | Name | Type | Requirement | Description |
 |---|---|---|---|
-| `type` | string | **Required** | Must be `custom:custom-radio-card`. |
+| `type` | string | **Required** | Must be `custom:web-radio-player-card`. |
 | `stations` | list | **Required** | A list of radio station objects. |
 | `media_players` | list | **Required** | A list of media player objects to display. |
+
+### Finding Radio Streams
+
+A great resource for finding radio stream URLs is Radio Browser, a community-driven database of internet radio stations.
+
+To find a stream URL:
+1.  Go to www.radio-browser.info.
+2.  Use the search bar to find your desired station.
+3.  In the results table, locate the station you want.
+4.  Hover over the station name to see the stream URL. A copy icon will appear next to it. Click the icon to copy the URL.
+5.  It's recommended to test the URL by pasting it into your browser's address bar to ensure it's a direct, working stream. MP3 streams are generally well-supported by most media players.
 
 ### Station Object
 
@@ -55,7 +66,7 @@ Add the card to your dashboard view via YAML.
 ### Example Configuration
 
 ```yaml
-type: custom:custom-radio-card
+type: custom:web-radio-player-card
 stations:
   - name: "Radio 538"
     url: "http://playerservices.streamtheworld.com/api/livestream-redirect/RADIO538.mp3"

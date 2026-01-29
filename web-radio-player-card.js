@@ -1,6 +1,6 @@
 import { LitElement, html, css } from "https://unpkg.com/lit-element/lit-element.js?module";
 
-class CustomRadioCard extends LitElement {
+class WebRadioPlayerCard extends LitElement {
     static get properties() {
         return {
             hass: {},
@@ -56,8 +56,8 @@ class CustomRadioCard extends LitElement {
         this.config = config;
     }
 
-    loadConnections() { try { return JSON.parse(localStorage.getItem("customRadioCardConnections")) || {}; } catch (e) { return {}; } }
-    saveConnections() { localStorage.setItem("customRadioCardConnections", JSON.stringify(this.connections)); }
+    loadConnections() { try { return JSON.parse(localStorage.getItem("webRadioPlayerCardConnections")) || {}; } catch (e) { return {}; } }
+    saveConnections() { localStorage.setItem("webRadioPlayerCardConnections", JSON.stringify(this.connections)); }
 
     handleDragStart(station) { this.draggingStation = station; }
     handleDragOver(ev, entityId) { ev.preventDefault(); this.dragOverPlayer = entityId; this.requestUpdate(); }
@@ -136,4 +136,4 @@ class CustomRadioCard extends LitElement {
     }
 }
 
-customElements.define("custom-radio-card", CustomRadioCard);
+customElements.define("web-radio-player-card", WebRadioPlayerCard);

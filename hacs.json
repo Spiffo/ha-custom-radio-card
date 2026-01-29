@@ -1,6 +1,6 @@
 {
-    "name": "Custom Radio Card",
+    "name": "Web Radio Player Card",
     "content_in_root": true,
     "render_readme": true,
-    "filename": "custom-radio-card.js"
+    "filename": "web-radio-player-card.js"
 }
