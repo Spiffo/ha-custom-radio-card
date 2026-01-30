@@ -152,6 +152,8 @@ class WebRadioPlayerCard extends LitElement {
     }
 }
 
+const includeDomains = ["media_player"];
+
 class WebRadioPlayerCardEditor extends LitElement {
     static get properties() {
         return { hass: {}, config: {} };
@@ -210,10 +212,10 @@ class WebRadioPlayerCardEditor extends LitElement {
         if (!this.hass || !this.config) return html``;
         return html`
             <h3>Stations</h3>
-            ${(this.config.stations || []).map((s, i) => html`<div class="row"><input type="text" placeholder="Name" .value="${s.name}" @input="${e => this.updateStation(i, 'name', e.target.value)}"><input type="text" placeholder="URL" .value="${s.url}" @input="${e => this.updateStation(i, 'url', e.target.value)}"><button @click="${() => this.removeStation(i)}">X</button></div>`)}
+            ${(this.config.stations || []).map((s, i) => html`<div class="row"><input type="text" placeholder="Name" .value="${s.name || ''}" @input="${e => this.updateStation(i, 'name', e.target.value)}"><input type="text" placeholder="URL" .value="${s.url || ''}" @input="${e => this.updateStation(i, 'url', e.target.value)}"><button @click="${() => this.removeStation(i)}">X</button></div>`)}
             <button @click="${() => this.addStation()}">Add Station</button>
             <h3>Players</h3>
-            ${(this.config.media_players || []).map((p, i) => html`<div class="row"><input type="text" placeholder="Name" .value="${p.name}" @input="${e => this.updatePlayer(i, 'name', e.target.value)}"><ha-entity-picker .hass="${this.hass}" .value="${p.entity_id}" .includeDomains="${['media_player']}" @value-changed="${e => this.updatePlayer(i, 'entity_id', e.detail.value)}"></ha-entity-picker><button @click="${() => this.removePlayer(i)}">X</button></div>`)}
+            ${(this.config.media_players || []).map((p, i) => html`<div class="row"><input type="text" placeholder="Name" .value="${p.name || ''}" @input="${e => this.updatePlayer(i, 'name', e.target.value)}"><ha-entity-picker .hass="${this.hass}" .value="${p.entity_id}" .includeDomains="${includeDomains}" @value-changed="${e => this.updatePlayer(i, 'entity_id', e.detail.value)}"></ha-entity-picker><button @click="${() => this.removePlayer(i)}">X</button></div>`)}
             <button @click="${() => this.addPlayer()}">Add Player</button>
         `;
     }
