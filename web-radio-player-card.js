@@ -12,6 +12,17 @@ class WebRadioPlayerCard extends LitElement {
         };
     }
 
+    static getConfigElement() {
+        return document.createElement("web-radio-player-card-editor");
+    }
+
+    static getStubConfig() {
+        return {
+            stations: [{ name: "Radio 538", url: "http://playerservices.streamtheworld.com/api/livestream-redirect/RADIO538.mp3" }],
+            media_players: [{ name: "Living Room", entity_id: "media_player.living_room" }]
+        };
+    }
+
     constructor() {
         super();
         this.draggingStation = null;
@@ -119,6 +130,10 @@ class WebRadioPlayerCard extends LitElement {
     }
 
     render() {
+        if (!this.config || !this.config.stations || !this.config.media_players) {
+            return html``;
+        }
+
         return html`
             <ha-card>
                 <h3>Stations</h3>
@@ -137,4 +152,72 @@ class WebRadioPlayerCard extends LitElement {
     }
 }
 
+class WebRadioPlayerCardEditor extends LitElement {
+    static get properties() {
+        return { hass: {}, config: {} };
+    }
+
+    setConfig(config) { this.config = config; }
+
+    configChanged(newConfig) {
+        this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: newConfig }, bubbles: true, composed: true }));
+    }
+
+    updateStation(index, field, value) {
+        const stations = [...(this.config.stations || [])];
+        stations[index] = { ...stations[index], [field]: value };
+        this.configChanged({ ...this.config, stations });
+    }
+
+    addStation() {
+        const stations = [...(this.config.stations || []), { name: "", url: "" }];
+        this.configChanged({ ...this.config, stations });
+    }
+
+    removeStation(index) {
+        const stations = [...(this.config.stations || [])];
+        stations.splice(index, 1);
+        this.configChanged({ ...this.config, stations });
+    }
+
+    updatePlayer(index, field, value) {
+        const media_players = [...(this.config.media_players || [])];
+        media_players[index] = { ...media_players[index], [field]: value };
+        this.configChanged({ ...this.config, media_players });
+    }
+
+    addPlayer() {
+        const media_players = [...(this.config.media_players || []), { name: "", entity_id: "" }];
+        this.configChanged({ ...this.config, media_players });
+    }
+
+    removePlayer(index) {
+        const media_players = [...(this.config.media_players || [])];
+        media_players.splice(index, 1);
+        this.configChanged({ ...this.config, media_players });
+    }
+
+    static get styles() {
+        return css`
+            .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+            input { padding: 8px; width: 100%; box-sizing: border-box; border: 1px solid var(--divider-color); background: var(--card-background-color); color: var(--primary-text-color); }
+            ha-entity-picker { width: 100%; }
+            button { cursor: pointer; padding: 8px; background: var(--primary-color); color: var(--text-primary-color); border: none; border-radius: 4px; }
+        `;
+    }
+
+    render() {
+        if (!this.hass || !this.config) return html``;
+        return html`
+            <h3>Stations</h3>
+            ${(this.config.stations || []).map((s, i) => html`<div class="row"><input type="text" placeholder="Name" .value="${s.name}" @input="${e => this.updateStation(i, 'name', e.target.value)}"><input type="text" placeholder="URL" .value="${s.url}" @input="${e => this.updateStation(i, 'url', e.target.value)}"><button @click="${() => this.removeStation(i)}">X</button></div>`)}
+            <button @click="${() => this.addStation()}">Add Station</button>
+            <h3>Players</h3>
+            ${(this.config.media_players || []).map((p, i) => html`<div class="row"><input type="text" placeholder="Name" .value="${p.name}" @input="${e => this.updatePlayer(i, 'name', e.target.value)}"><ha-entity-picker .hass="${this.hass}" .value="${p.entity_id}" .includeDomains="${['media_player']}" @value-changed="${e => this.updatePlayer(i, 'entity_id', e.detail.value)}"></ha-entity-picker><button @click="${() => this.removePlayer(i)}">X</button></div>`)}
+            <button @click="${() => this.addPlayer()}">Add Player</button>
+        `;
+    }
+}
+
 customElements.define("web-radio-player-card", WebRadioPlayerCard);
+customElements.define("web-radio-player-card-editor", WebRadioPlayerCardEditor);
